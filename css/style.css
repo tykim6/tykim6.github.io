@@ -63,3 +63,34 @@ p,
 .portfolio_object {
   margin-bottom: 100px;
 }
+
+.project_grid {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  padding: 5px;
+  justify-content: flex-start;
+}
+
+figure {
+  border: thin #c0c0c0 solid;
+  display: flex;
+  flex-flow: column;
+  max-width: 300px;
+  max-height: 150px;
+  margin: 5px;
+}
+
+img {
+  width: 300px;
+  height: 150px;
+  object-fit: contain;
+}
+
+figcaption {
+  background-color: #222;
+  color: #fff;
+  font: italic smaller sans-serif;
+  padding: 3px;
+  text-align: center;
+}
