@@ -62,10 +62,6 @@ p,
   margin-left: -5px;
 }
 
-.portfolio_object {
-  margin-bottom: 100px;
-}
-
 .project-container {
   display: flex;
   flex-flow: row-reverse wrap-reverse;
@@ -81,6 +77,10 @@ figure {
   align-items: center;
 }
 
+figure:hover {
+  transform: scale(1.05);
+}
+
 .page-text {
   white-space: pre-wrap;
 }
@@ -88,14 +88,15 @@ figure {
 img {
   width: 300px;
   height: 150px;
-  object-fit: contain;
+  object-fit: fill;
 }
 
 figcaption {
   background-color: #222;
   color: #fff;
-  font: italic smaller sans-serif;
-  padding: 3px;
+  font: tahoma;
+  font-size: small;
+  padding: 5px;
   text-align: center;
 }
 
