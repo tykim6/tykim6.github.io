@@ -1,47 +1,70 @@
-* {
-  background-color: rgb(255, 255, 255);
-  color: rgb(0, 0, 0);
-  font-family: "Tahoma";
-}
-
 body,
 h1,
-p,
-.topnav {
+p {
+  background: rgb(191, 238, 174);
+  background: radial-gradient(
+    circle,
+    rgba(191, 238, 174, 1) 0%,
+    rgba(233, 226, 148, 1) 100%
+  );
   margin: 10px 5px 15px 20px;
-}
-
-a {
-  color: blue;
+  font-family: "Poppins", sans-serif;
 }
 
 .topnav {
-  background-color: rgb(255, 255, 255);
   overflow: hidden;
+  margin: 10px 5px 15px 20px;
 }
 
 /* Style the links inside the navigation bar */
 .topnav a {
   float: left;
-  color: #0000ee;
   text-align: center;
-  padding: 14px 16px;
-  font-size: 17px;
+  color: black;
+  font-weight: 700;
+  padding: 30px 36px;
+  margin: 0.5%;
+  font-size: 24px;
 }
 
 /* Change the color of links on hover */
 .topnav a:hover {
   background-color: #ddd;
   color: blue;
-  border-radius: 10px;
-  font-size: 20px;
+  border-radius: 5px;
   font-weight: bold;
+  animation: jump-shaking 2s infinite;
+  animation-delay: 0.2s;
+}
+
+@keyframes jump-shaking {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateY(-9px);
+  }
+  35% {
+    transform: translateY(-9px) rotate(17deg);
+  }
+  55% {
+    transform: translateY(-9px) rotate(-17deg);
+  }
+  65% {
+    transform: translateY(-9px) rotate(17deg);
+  }
+  75% {
+    transform: translateY(-9px) rotate(-17deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
 }
 
 /* Add a color to the active/current link */
 .topnav a.active {
   border-radius: 10px;
-  font-size: 20px;
+  transform: scale(1.05);
   font-weight: bold;
   color: blue;
 }
@@ -66,27 +89,38 @@ a {
   margin-left: -5px;
 }
 
-.thumbnail-container {
-  display: flex;
-  flex-flow: row-reverse wrap-reverse;
-  align-content: flex-end;
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 15px;
 }
 
-figure {
+.project figure {
   border: thin #c0c0c0 solid;
   display: flex;
   max-width: auto;
   max-height: auto;
-  flex-basis: auto;
   align-items: center;
+  height: auto;
+  width: auto;
 }
 
-figure:hover {
+.project figure:hover {
   transform: scale(1.05);
 }
 
-.page-text {
-  white-space: pre-wrap;
+.project figure figcaption {
+  background-color: #222;
+  color: #fff;
+  font-size: small;
+  padding: 5px;
+  width: auto;
+  text-align: center;
+}
+
+.project figure img {
+  height: 400px;
+  width: 400px;
 }
 
 .project-header {
@@ -106,26 +140,13 @@ figure:hover {
 .project-media {
   display: flex;
   justify-content: center;
+  align-items: center;
+  justify-content: center;
 }
 
 .project-media > embed {
-  width: 80%;
-  height: "600";
-}
-
-img {
-  width: 300px;
-  height: 150px;
-  object-fit: fill;
-}
-
-figcaption {
-  background-color: #222;
-  color: #fff;
-  font: tahoma;
-  font-size: small;
-  padding: 5px;
-  text-align: center;
+  width: 80vw;
+  height: 90vh;
 }
 
 .caption-link {
