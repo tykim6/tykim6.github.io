@@ -1,6 +1,11 @@
 * {
-  margin: 10px 5px 15px 20px;
   font-family: "Poppins", sans-serif;
+}
+
+p {
+  margin: 10px 5px 15px 20px;
+  justify-content: center;
+  text-align: center;
 }
 
 body {
@@ -92,64 +97,21 @@ body {
 
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  grid-gap: 15px;
-}
-
-.project figure {
-  border: thin #c0c0c0 solid;
-  display: flex;
-  max-width: auto;
-  max-height: auto;
-  align-items: center;
-  height: auto;
-  width: auto;
-}
-
-.project figure:hover {
-  transform: scale(1.05);
-}
-
-.project figure figcaption {
-  background-color: #222;
-  color: #fff;
-  font-size: small;
-  padding: 5px;
-  width: auto;
-  text-align: center;
-}
-
-.project figure img {
-  height: 400px;
-  width: 400px;
-}
-
-.project-header {
-  padding: 30px;
-  text-align: center;
-  font-size: 30px;
-  text-decoration: underline;
-  font-weight: bold;
-}
-
-.project-description {
-  text-align: center;
-  width: 700px;
-  margin: 0 auto;
-}
-
-.project-media {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  --cell: 20vw;
+  --grid: repeat(3, var(--cell));
+  grid-template: auto / var(--grid);
+  grid-gap: min(5vw, 5em);
   justify-content: center;
 }
 
-.project-media > embed {
-  width: 80vw;
-  height: 90vh;
+.project-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.caption-link {
-  text-decoration: none;
+@media (min-width: 670px) {
+  body {
+    grid-template: var(--grid) / var(--grid);
+  }
 }
