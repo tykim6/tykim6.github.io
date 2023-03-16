@@ -109,9 +109,3 @@ body {
   height: 20em;
   object-fit: cover;
 }
-
-@media (min-width: 670px) {
-  body {
-    grid-template: var(--grid) / var(--grid);
-  }
-}
