@@ -109,3 +109,9 @@ body {
   height: 20em;
   object-fit: cover;
 }
+
+@media (max-width: 1200px) {
+  .project-grid {
+    grid-template: 1fr / auto;
+  }
+}
