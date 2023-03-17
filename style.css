@@ -1,3 +1,5 @@
+/* MAIN GLOBAL STYLES */
+
 * {
   font-family: "Poppins", sans-serif;
 }
@@ -16,6 +18,12 @@ body {
     rgba(233, 226, 148, 1) 100%
   );
 }
+
+.project-header {
+  text-align: center;
+}
+
+/* TOP NAV */
 
 .topnav {
   overflow: hidden;
@@ -74,6 +82,7 @@ body {
   font-weight: bold;
   color: blue;
 }
+/* CONTACTS */
 
 .contactlinks a svg {
   pointer-events: none;
@@ -95,13 +104,18 @@ body {
   margin-left: -5px;
 }
 
+/* PROJECTS */
+
 .project-grid {
   display: grid;
   --cell: 20em;
   --grid: repeat(3, var(--cell));
   grid-template: auto / var(--grid);
   grid-gap: min(5vw, 5em);
-  justify-content: center;
+  justify-content: space-evenly;
+  justify-items: center;
+  align-content: space-evenly;
+  align-items: center;
 }
 
 .project-grid img {
@@ -109,9 +123,23 @@ body {
   height: 20em;
   object-fit: cover;
 }
-
+/* for mobile viewing */
 @media (max-width: 1200px) {
   .project-grid {
     grid-template: 1fr / auto;
   }
+}
+
+figcaption {
+  text-align: center;
+}
+
+.project-media {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
 }
