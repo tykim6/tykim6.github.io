@@ -135,6 +135,21 @@ body {
   }
 }
 
+/* Mobile Styles */
+@media screen and (max-width: 767px) {
+  /* Navigation bar styles */
+  .topnav a {
+    padding: 12px 16px;
+    font-size: 18px;
+  }
+
+  /* PDF viewer styles */
+  .project-media iframe {
+    width: 90%;
+    height: 400px;
+  }
+}
+
 figcaption {
   text-align: center;
 }
