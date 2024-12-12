@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+
+<head>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+	<link rel="shortcut icon" href="images/icon.ico">
+	<style type="text/css">
+		body {
+			background-color: #c1c1c1;
+		}
+
+		/* Hide both math displays initially, will display based on JS detection */
+		.mathjax-mobile,
+		.mathml-non-mobile {
+			display: none;
+		}
+
+		/* Show the MathML content by default on non-mobile devices */
+		.show-mathml .mathml-non-mobile {
+			display: block;
+		}
+
+		.show-mathjax .mathjax-mobile {
+			display: block;
+		}
+
+		.content-margin-container {
+			display: flex;
+			width: 100%;
+			/* Ensure the container is full width */
+			justify-content: left;
+			/* Horizontally centers the children in the container */
+			align-items: center;
+			/* Vertically centers the children in the container */
+		}
+
+		.main-content-block {
+			width: 70%;
+			/* Change this percentage as needed */
+			max-width: 1100px;
+			/* Optional: Maximum width */
+			background-color: #e9e9e9;
+			border-left: 1px solid #DDD;
+			border-right: 1px solid #DDD;
+			padding: 8px 8px 8px 8px;
+			font-family: Georgia, serif;
+			#"Avenir";
+		}
+
+		.margin-left-block {
+			font-size: 14px;
+			width: 15%;
+			/* Change this percentage as needed */
+			max-width: 130px;
+			/* Optional: Maximum width */
+			position: relative;
+			margin-left: 10px;
+			text-align: left;
+			font-family: Georgia, serif;
+			padding: 5px;
+			overflow-wrap: break-word;
+			/* Wrap overflowing text */
+			word-wrap: break-word;
+			/* Legacy support */
+			word-break: break-word;
+			/* Fallback */
+			box-sizing: border-box;
+			/* Include padding in width calculation */
+			width: 100%;
+			/* Fill available width */
+		}
+
+		.margin-right-block {
+			font-family: Georgia, serif;
+			font-size: 14px;
+			width: 25%;
+			/* Change this percentage as needed */
+			max-width: 256px;
+			/* Optional: Maximum width */
+			position: relative;
+			text-align: left;
+			padding: 10px;
+			/* Optional: Adds padding inside the caption */
+		}
+
+		img {
+			max-width: 100%;
+			/* Make sure it fits inside the container */
+			height: auto;
+			display: block;
+			margin: auto;
+		}
+
+		.my-video {
+			max-width: 100%;
+			/* Make sure it fits inside the container */
+			height: auto;
+			display: block;
+			margin: auto;
+		}
+
+		/* Hide both video displays initially, will display based on JS detection */
+		.vid-mobile,
+		.vid-non-mobile {
+			display: none;
+		}
+
+		/* Show the video content by default on non-mobile devices */
+		.show-vid-mobile .vid-mobile {
+			display: block;
+		}
+
+		.show-vid-non-mobile .vid-non-mobile {
+			display: block;
+		}
+
+		a:link,
+		a:visited {
+			color: #0e7862;
+			/*#1367a7;*/
+			text-decoration: none;
+		}
+
+		a:hover {
+			color: #24b597;
+			/*#208799;*/
+		}
+
+		h1 {
+			font-size: 18px;
+			margin-top: 4px;
+			margin-bottom: 10px;
+		}
+
+		table.header {
+			font-weight: 300;
+			font-size: 17px;
+			flex-grow: 1;
+			width: 70%;
+			max-width: calc(100% - 290px);
+			/* Adjust according to the width of .paper-code-tab */
+		}
+
+		table td,
+		table td * {
+			vertical-align: middle;
+			position: relative;
+		}
+
+		table.paper-code-tab {
+			flex-shrink: 0;
+			margin-left: 8px;
+			margin-top: 8px;
+			padding: 0px 0px 0px 8px;
+			width: 290px;
+			height: 150px;
+		}
+
+		.layered-paper {
+			/* modified from: http://css-tricks.com/snippets/css/layered-paper/ */
+			box-shadow:
+				0px 0px 1px 1px rgba(0, 0, 0, 0.35),
+				/* The top layer shadow */
+				5px 5px 0 0px #fff,
+				/* The second layer */
+				5px 5px 1px 1px rgba(0, 0, 0, 0.35),
+				/* The second layer shadow */
+				10px 10px 0 0px #fff,
+				/* The third layer */
+				10px 10px 1px 1px rgba(0, 0, 0, 0.35);
+			/* The third layer shadow */
+			margin-top: 5px;
+			margin-left: 10px;
+			margin-right: 30px;
+			margin-bottom: 5px;
+		}
+
+		hr {
+			height: 1px;
+			/* Sets the height of the line to 1 pixel */
+			border: none;
+			/* Removes the default border */
+			background-color: #DDD;
+			/* Sets the line color to black */
+		}
+
+		div.hypothesis {
+			width: 80%;
+			background-color: #EEE;
+			border: 1px solid black;
+			border-radius: 10px;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			font-family: Courier;
+			font-size: 18px;
+			text-align: center;
+			margin: auto;
+			padding: 16px 16px 16px 16px;
+		}
+
+		div.citation {
+			font-size: 0.8em;
+			background-color: #fff;
+			padding: 10px;
+			height: 200px;
+		}
+
+		.fade-in-inline {
+			position: absolute;
+			text-align: center;
+			margin: auto;
+			-webkit-mask-image: linear-gradient(to right,
+					transparent 0%,
+					transparent 40%,
+					black 50%,
+					black 90%,
+					transparent 100%);
+			mask-image: linear-gradient(to right,
+					transparent 0%,
+					transparent 40%,
+					black 50%,
+					black 90%,
+					transparent 100%);
+			-webkit-mask-size: 8000% 100%;
+			mask-size: 8000% 100%;
+			animation-name: sweepMask;
+			animation-duration: 4s;
+			animation-iteration-count: infinite;
+			animation-timing-function: linear;
+			animation-delay: -1s;
+		}
+
+		.fade-in2-inline {
+			animation-delay: 1s;
+		}
+
+		.inline-div {
+			position: relative;
+			display: inline-block;
+			/* Makes both the div and paragraph inline-block elements */
+			vertical-align: top;
+			/* Aligns them at the top, you can adjust this to middle, bottom, etc., based on your needs */
+			width: 50px;
+			/* Optional: Adds space between the div and the paragraph */
+		}
+
+		/* Dark theme for code blocks */
+		pre {
+			background-color: #1e1e1e;
+			border-radius: 6px;
+			padding: 15px;
+			overflow-x: auto;
+		}
+
+		code {
+			color: #d4d4d4;
+			font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+		}
+
+		/* Syntax highlighting */
+		.keyword {
+			color: #569cd6;
+		}
+
+		/* blue */
+		.string {
+			color: #ce9178;
+		}
+
+		/* orange-red */
+		.comment {
+			color: #6a9955;
+		}
+
+		/* green */
+		.number {
+			color: #b5cea8;
+		}
+
+		/* light green */
+		.operator {
+			color: #d4d4d4;
+		}
+
+		/* white */
+		.property {
+			color: #9cdcfe;
+		}
+
+		/* light blue */
+		.function {
+			color: #dcdcaa;
+		}
+
+		/* yellow */
+
+		/* Line numbers */
+		pre {
+			counter-reset: line;
+		}
+
+		code>span {
+			display: block;
+		}
+
+		code>span:before {
+			counter-increment: line;
+			content: counter(line);
+			display: inline-block;
+			padding: 0 .5em;
+			margin-right: .5em;
+			color: #858585;
+			border-right: 1px solid #404040;
+		}
+	</style>
+
+	<title>Predicting Wave Heights from Floating Buoy Data
+	</title>
+	<meta property="og:title" content="Predicting Wave Heights from Floating Buoy Data" />
+	<meta charset="UTF-8">
+
+	<!-- Local MathJax configuration -->
+	<script>
+		window.MathJax = {
+			tex: {
+				inlineMath: [['$', '$'], ['\\(', '\\)']],
+				displayMath: [['$$', '$$'], ['\\[', '\\]']],
+				processEscapes: true
+			}
+		};
+	</script>
+	<script src="js/MathJax/es5/tex-chtml.js" id="MathJax-script"></script>
+
+	<!-- Syntax highlighting -->
+	<link href="js/prism-tomorrow.min.css" rel="stylesheet" />
+	<link href="js/prism-line-numbers.min.css" rel="stylesheet" />
+	<script src="js/prism.min.js"></script>
+	<script src="js/prism-python.min.js"></script>
+	<script src="js/prism-line-numbers.min.js"></script>
+
+	<style>
+		/* Code block styling */
+		pre[class*="language-"] {
+			border-radius: 6px;
+			margin: 1.5em 0;
+			background: #1e1e1e !important;
+		}
+
+		code[class*="language-"] {
+			font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+			text-shadow: none !important;
+		}
+
+		.line-numbers .line-numbers-rows {
+			border-right: 1px solid #404040;
+		}
+
+		.token.comment {
+			color: #6A9955 !important;
+		}
+
+		.token.property {
+			color: #9CDCFE !important;
+		}
+
+		.token.punctuation {
+			color: #D4D4D4 !important;
+		}
+
+		.token.string {
+			color: #CE9178 !important;
+		}
+
+		.token.function {
+			color: #DCDCAA !important;
+		}
+
+		.token.keyword {
+			color: #569CD6 !important;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="content-margin-container">
+		<div class="margin-left-block">
+		</div>
+		<div class="main-content-block">
+			<table class="header" align=left>
+				<tr>
+					<td colspan=4>
+						<span
+							style="font-size: 32px; font-family: 'Courier New', Courier, monospace; /* Adds fallbacks */">A
+							Predicting Wave Heights from Floating Buoy Data</span>
+					</td>
+				</tr>
+				<tr>
+					<td align=left>
+						<span style="font-size:17px">
+							<div>Tyler Kim</div>
+						</span>
+					</td>
+				<tr>
+					<td colspan=4 align=left><span style="font-size:18px">Final project for 6.7960, MIT</span></td>
+				</tr>
+			</table>
+		</div>
+		<div class="margin-right-block">
+		</div>
+	</div>
+
+	<div class="margin-left-block">
+		<!-- table of contents here -->
+		<div style="position:fixed; max-width:inherit; top:max(20%,120px)">
+			<a href="#motivation"><b style="font-size:16px">Motivation</b></a><br><br>
+			<a href="#data">Data</a><br><br>
+			<a href="#architecture">Architecture</a><br><br>
+			<a href="#results">Results</a><br><br>
+		</div>
+	</div>
+
+	<div class="content-margin-container" id="motivation">
+		<div class="margin-left-block">
+		</div>
+		<div class="main-content-block">
+			<h1>Motivation</h1>
+			Approximately 71% of the Earth's surface is covered by water. Prior to the 15th century, the ocean
+			posed a barrier between the various socieities of the world. Humanity's ability to traverse the ocean was
+			the tipping point of recent history, as disparate geographies were now acessible to each other. Trade of
+			spices, cultures, and ideas between foreign lands has ushered in an era of globalization that shapes
+			every aspect of our lives today.
+			<br><br>
+			The ocean still has potential to continue revolutionizing life on Earth. In the face of growing climate
+			crises, wave energy could serve as a new source of renewable energy. Wave energy is much more reliable, and
+			an order of magnitude more powerful than wind energy, according to <a href="#ref_1">[1]</a>. One vital
+			characteristic
+			of wave energy is wave height.
+			<br><br>
+			Beyond renewable energy, wave height plays an important role in commercial shipping, for both boat activity
+			<a href="#ref_2">[2]</a>
+			as well as port operations <a href="#ref_3">[3]</a>. Additionally, water sports like surfing rely on
+			accurate predictions of wave
+			heights. The global market for surfing is estimated to reach $5.5 billion by 2030 <a href="#ref_4">[4]</a>,
+			and companies like
+			Surfline play a crucial role in the industry by providing surf forecasts.
+			<br><br>
+			Given the importance of wave heights, many approaches to wave forecasting have been devised. WAVEWATCHCIII
+			(Tolman, 1991), a physically-based engineering model, is still widely used in practice today. However,
+			WAVEWATCHCIII is
+			numerical solver <a href="#ref5">[5]</a>, which are computationally intensive and make assumptions of
+			natural
+			phenomena.
+			<br><br>
+			Recently, deep learning methods have been proposed to perform wave forecasting, including LSTM <a
+				href="#ref9">[9]</a> and transformer based approaches <a href="#ref8">[8]</a>. However, the current
+			literature
+			considers the forecasting task for a single buoy, given the previous data from that buoy. Since wave energy
+			travels
+			throughout the ocean,
+			it is reasonable to assume that past wave data from nearby locations will be relevant to the prediction
+			task. This project
+			explores the impact of providing the model with data from nearby buoys for the prediction task of wave
+			height.
+			<br><br>
+			Luckily for researchers, the National Oceanic and Atmospheric Administration, a division of the US
+			Department
+			of commerce, collects data on ocean condititions from buoys stationed around the world. Using this data, I
+			train a transformer-based
+			neural network to predict wave heights. I modify the standard transformer architecture by utilizing custom
+			dataset generation logic,
+			which allows for the inclusion of wave data from nearby, offshore buoys to provide additional context to the
+			prediction task at nearshore locations.
+		</div>
+		<div class="margin-right-block">
+		</div>
+	</div>
+
+	<div class="content-margin-container" id="data">
+		<div class="margin-left-block">
+		</div>
+		<div class="main-content-block">
+			<h1>Data</h1>
+			The dataset is collected from the <a href="https://www.ndbc.noaa.gov/">National Oceanic and Atmospheric
+				Administration (NOAA)</a>. The NOAA stations buoys around the world that collect data on wave factors. A
+			full
+			description of the data can be found <a href="https://www.ndbc.noaa.gov/faq/measdes.shtml">at the data
+				description here</a>.
+			<br><br>
+			<h4>Data Preprocessing</h4>
+			The data is recorded at the minute level for the year 2023. To reduce the complexity of the dataset, and to
+			avoid
+			exceedingly large context windows, I convert the data to hourly samples by taking the last record for each
+			hour. The data also contains missing values, which are encoded as "999" or some value with 9's in each
+			digit.
+		</div>
+		<div class="margin-right-block">
+			It is easy to discern that these are missing values, and not actual observations of 99. Examples are columns
+			of wind directions,
+			which are on a scale of 0-360. For missing records where a value of "999" would be feasible, like
+			atmospheric pressure,
+			digits are added so that it's "9999", for instance.
+			<br><br>
+		</div>
+	</div>
+	<div class="content-margin-container" id="">
+		<div class="margin-left-block">
+		</div>
+		<div class="main-content-block">
+			After dropping the missing values, we are left with:
+			<ul>
+				<li>Wave Height</li>
+				<li>Dominant Wave Period</li>
+				<li>Average Wave Period</li>
+				<li>Wave Direction</li>
+				<li>Water Temperature</li>
+			</ul>
+			Within the columns we keep, there are still additional missing values that are randomly dispersed throughout
+			the dataset.
+			These missing values are also encoded as "999" or some value with 9's in each digit. These differences can
+			actually be
+			observed, and boxplots of the data distribution <a href="#data-distr-before-imp">before imputation</a> and
+			<a href="#data-distr-after-imp">after imputation</a> are shown in the appendix. We can see that the
+			Topanga buoy has outlier values of 9999 for wave direction. Additionally, while it is harder to see due to
+			the scale,
+			there are also outliers for wave height, dominant wave period, and average wave period. While values of 99
+			are not technically impossible,
+			the fact that these outliers occur at exact values of 99 indicates that they are likely truly missing. These
+			random missing values
+			are imputated according to the mean of a rolling average from a window of 10 hours before and after the
+			missing value.
+			<h4>Data Exploration</h4>
+			For the rest of the analysis, we are interested in predicting wave height. To understand the
+			form of the target
+			variable, a plot of wave height data from the Topanga buoy in the month of January 2023 is shown below:
+			<br><br>
+			<img src="./images/plots/topanga_height.png" alt="Topanga Height Data" id="topanga-height"
+				style="width: 70%;">
+			<br><br>
+			There is a fair amount of periodicity, as well as some variability with seasons, such as a large spike
+			in wave height at the start of January. This tracks relatively well with intuition, as swell waves are
+			generated by storms throughout the Pacific Ocean during the winter months. <a href="#ref_7">[7]</a>
+			<br><br>
+
+		</div>
+		<div class="margin-right-block">
+			Wave height data from Topanga buoy, for the month of January 2023.
+		</div>
+	</div>
+	</div>
+
+	<div class="content-margin-container" id="la-sd-comparison">
+		<div class="margin-left-block">
+		</div>
+		<div class="main-content-block">
+			In our analysis, we consider two offshore-nearshore buoy pairs --- Leucadia and Oceanside, and Topanga
+			and Santa Monica. To see the comparisons between the heights of waves at the two locations, a 4 day
+			selection is plotted
+			below (note that Santa Monica/Topanga are in LA, and Leucadia/Oceanside are in San Diego).
+			<img src="./images/plots/la-sd-height-comp.png" alt="LA vs SD Wave Height Comparison" style="width: 70%;">
+			<br><br>
+			To better understand other columns, like the wave direction, a plot is included in the <a
+				href="#wave-dirs-plot">appendix</a>. With an understanding of our dataset, we can begin to discss the
+			details of the wave height prediction model.
+		</div>
+		<div class="margin-right-block">
+			Comparison of wave heights between LA and San Diego.
+		</div>
+	</div>
+	<div class="content-margin-container">
+		<div class="margin-left-block">
+		</div>
+		<div class="main-content-block">
+			<h1>Architecture</h1>
+			The proposed algorithm begins with the dataset generator. Prior work on wave height prediction considers the
+			canonical
+			forecasting task --- given a stream of consecutive data realizations indexed by time, use previous
+			realizations
+			to predict future values <a href="#ref6">[6]</a>. Formally, they seek a function $f^*(\cdot)$ that produces
+			predictions
+			$\hat{Y^*}$ given a time-indexed sequence of data $X_n$. $$f^*(X_t | X_{t-w},
+			X_{t-w+1}, ... X_{t-1}) = \hat{Y^*_t}$$
+			for context window size $w$. The function is optimal in the sense that it produces predictions with minimal
+			loss/error: $$f^* = \arg \min_f \mathbb{L}(f(x), y)$$ where $\mathbb{L}$ is a loss function.
+			<br><br>
+			However, due
+			to the nature of ocean currents, we have
+			additional
+			information that would be relevant to the prediction task --- wave data from nearby buoys. The prediction
+			task
+			would then become $$f^*(X_t | \{X_{t-w}, X_{t-w+1}, ... X_{t-1}\} \cup \{Z_{t-k-w+1}, Z_{t-k-w+2}, ...
+			Z_{t-k}\})
+			=
+			\hat{Y^*_t}$$
+			with $Z$ being the data from the nearby buoy, time lag $k$, and context window size $w$. Theoretically, as
+			long as
+			Z is not excessively noisy, the additional information should improve the model's predictive power.
+			<br><br>
+			The assumption that Z is not noisy is reasonable to make. Wave energy travels throughout
+			the ocean, and wave energies propagate in predictable ways. For example, the California Current travels
+			southward along the
+			West Coast of the United States from British Columbia,
+			Canada, to the southern tip of California.
+			<br><br>
+			In our dataset, we utilize a more readily observable oceanic phenomenon --- the flow of water towards the
+			shore,
+			creating the waves that make California's beaches famous. The locations of two of the buoys in our dataset
+			are
+			shown below:
+			<br><br>
+			<img src="./images/leucadia_oceanside_buoys.png" alt="Leucadia and Oceanside Buoy Locations"
+				style="width: 65%;">
+			<br><br>
+			The dataset generator takes in data from two buoys --- one offshore, and one nearshore. The
+			generator produces $(\text{nearshore data}, \text{offshore data}, \text{target})$ triplets. Becuase the
+			number
+			of FLOPs grows quadratically with the size of the context window in the attention mechanism, we restrict the
+			"context"
+			(number of trailing timesteps before target) to be 24 --- since our data is sampled every hour, the model
+			has access
+			to the previous 24 hours worth of data when generating a prediction of wave height.
+			<br><br>
+			I also include an
+			additional parameter
+			<i>k</i>, to control the time lag between the offshore and nearshore buoys. To understand the function of
+			<i>k</i>, consider an
+			offshore buoy that is very far from the
+			nearshore. The slice of the offshore buoy's data should be adjusted to account for the time that it takes
+			for the wave
+			energy to travel from the offshore buoy to the nearshore buoy. Formally, we provide training samples to the
+			model in the form of
+			$$(\text{nearshore data}[t-24:t-1], \text{offshore data}[t-k-24:t-k-1], \text{target}[t])$$
+
+
+		</div>
+		<div class="margin-right-block">
+		</div>
+	</div>
+	<div class="content-margin-container" id="">
+		<div class="margin-left-block">
+		</div>
+		<div class="main-content-block">
+			<br><br>
+			From this definition, we can see that increasing <i>k</i>, the time lag, will result in the model being
+			trained on older slices of
+			offshore buoy data. In our hypothetical example above, higher <i>k</i> would allow the model to access
+			offshore
+			buoy data that
+			is relevant to the prediction task.
+			<br><br>
+			The model itself consists of an initial linear embedding layer, two multi-head attention layers, and
+			a linear output layer. Both the nearshore and offshore data are passed through a separate transformer block,
+			mean pooled, and concatenated. The concatenated data is passed through a final linear layer to produce the
+			prediction. I train the model for 15 epochs, batch size 128, and learning rate 0.001. A diagram of the
+			architecture is shown below
+			<br><br>
+			<img src="./images/plots/architecture.drawio.png" alt="Model Architecture" style="width: 65%;">
+			<br><br>
+			The introduction of the new parameter <i>k</i> creates a natural question --- how should we choose the value
+			of <i>k</i>?
+			In this project, I take a simple approach and performs a search over a few reasonable values of <i>k</i>,
+			and choose the model
+			with the best performing <i>k</i>. Values of <i>k</i> come from a set of candidate values $[1, 12, 24, 48,
+			168]$. The construction of our training data means that for $k = 48$, the prediction task for time $t$ will
+			utilize offshore buoy data
+			from 2 days prior, with a 24-hour context window.
+			<br><br>
+			I use the mean squared error (MSE) as the loss function, and to judge the marginal value of providing data
+			from offshore buoys, I compare against a model in the canonical forecasting task: predicting the value of
+			wave height
+			at the nearshore buoy at time $t$ given data from the buoy at times $[t-24, t-23, ... t-1]$.
+		</div>
+		<div class="margin-right-block">
+			One alternative approach to choosing <i>k</i> would be to separate the training process into two stages
+			---
+			the
+			first
+			to identify the optimal <i>$k^*$</i>, and the second to train the model using $k^*$. In the first stage,
+			$k^*$ could be identified by defining a $\delta-$neighborhood around an initially random choice of $k$,
+			so
+			that
+			we train on $\delta$ values of $k$, choosing the value of $k$ with the minimum MSE on a validation set. The
+			periodicity
+			of ocean movement means that the loss landscape will have many local minima, each with less predictive
+			power. It may make sense
+			to initialize the search for $k^*$ with smaller <i>k</i>'s to avoid local minima from previous ocean
+			periods.
+		</div>
+	</div>
+	<div class="content-margin-container" id="results">
+		<div class="margin-left-block">
+		</div>
+		<div class="main-content-block">
+			<h1>Results</h1>
+			Results of training for the LA buoys (Santa Monica, Topanga) and SD buoys (Leucadia, Oceanside) are shown
+			below:
+			<br><br>
+			<h4>Training Loss Curve for Leucadia (y-axis is MSE loss, x-axis is step)</h4>
+			<img src="./images/plots/leucadia_train.png" alt="leucadia_train" style="width: 65%;">
+			<br><br>
+			<h4>Training Loss Curve for Topanga (y-axis is MSE loss, x-axis is step)</h4>
+			<img src="./images/plots/topanga_train.png" alt="topanga_train" style="width: 65%;">
+			<br><br>
+			For the Topanga buoy, the model with $k=168$ (7 days) achieves the lowest training loss at 0.053.
+			When tested on a validation set, the model with $k=12$ achieves the lowest training loss, with
+			0.054. For the Leucadia buoy, the model with $k=1$ achieves both the lowest training loss
+			and validation loss at 0.111 and 0.114, respectively.
+			<br><br>
+			The results indicate that the Topanga buoy depends differently on the offshore buoy data than the Leucadia
+			buoy. Interestingly,
+			despite the Topanga buoy being closer to its offshore buoy (11.74 miles vs. 12.15 miles), the optimal time
+			lag $k=12$ hours for Topanga, while
+			it's only 1 hour for Leucadia.
+			What is the cause of this discrepancy? Looking at the
+			buoy locations plotted below, we can see that the orientation of the nearshore buoys relative to the
+			offshore buoys are different.
+			<br><br>
+			<div style="display: flex; justify-content: space-between;">
+				<div style="width: 48%;">
+					<h4>Leucadia and Oceanside Buoys</h4>
+					<img src="./images/leucadia_oceanside_buoys.png" alt="leucadia_oceanside_buoys"
+						style="width: 100%;">
+				</div>
+				<div style="width: 48%;">
+					<h4>Topanga and Santa Monica Buoys</h4>
+					<img src="./images/topanga_sm_buoys.png" alt="topanga_sm_buoys" style="width: 100%;">
+				</div>
+			</div>
+			<br><br>
+			Recalling the southward flow of the California Current, we can see that the Leucadia buoy is in the direct
+			path
+			of ocean flows, whereas the Topanga buoy is not --- in fact, the Topanga buoy is <i>above</i> the Santa
+			Monica Bay buoy. However,
+			the ocean flows through Santa Monica Bay can still propagate towards the Topanga buoy, due to the formation
+			of eddies, which
+			can be caused by wind effects, instabilities in ocean currents, and differences in water temperatures and
+			densities. Eddies, along with coastal topographies like the Palos Verdes Pensinsula create the phenomenon
+			known as the Southern California Counter Current --- a northward flow that opposes the direction of the
+			California
+			Current. Naturally, this indirect path means that the wave energies from the Santa Monica Bay
+			will take longer to reach the Topanga buoy, as reflected by larger time lags $k$. Intererstingly, our
+			model has learned to pick up on this relationship through the flexible context window for offshore data.
+			This indicates that even buoys which lie outside the typical flow of current could be helpful in predicting
+			wave heights.
+			<br><br>
+			The key question is
+			whether using offshore buoy data actually improves the model's performance. Below, we compare the model's
+			validation loss when trained on both offshore and nearshore buoy data versus just nearshore buoy data:
+			<br><br>
+			<table style="width: 100%; border-collapse: collapse; text-align: center;">
+				<tr>
+					<th style="border: 1px solid black; padding: 8px;">Location</th>
+					<th style="border: 1px solid black; padding: 8px;">Data Used</th>
+					<th style="border: 1px solid black; padding: 8px;">Validation Loss (MSE)</th>
+				</tr>
+				<tr>
+					<td style="border: 1px solid black; padding: 8px;" rowspan="2">Leucadia</td>
+					<td style="border: 1px solid black; padding: 8px; background-color: #FFFF00;">Nearshore + Offshore
+					</td>
+					<td style="border: 1px solid black; padding: 8px; background-color: #FFFF00;">0.11</td>
+				</tr>
+				<tr>
+					<td style="border: 1px solid black; padding: 8px;">Nearshore Only</td>
+					<td style="border: 1px solid black; padding: 8px;">0.12</td>
+				</tr>
+				<tr>
+					<td style="border: 1px solid black; padding: 8px;" rowspan="2">Topanga</td>
+					<td style="border: 1px solid black; padding: 8px; background-color: #FFFF00;">Nearshore + Offshore
+					</td>
+					<td style="border: 1px solid black; padding: 8px; background-color: #FFFF00;">0.054</td>
+				</tr>
+				<tr>
+					<td style="border: 1px solid black; padding: 8px;">Nearshore Only</td>
+					<td style="border: 1px solid black; padding: 8px;">0.06</td>
+				</tr>
+			</table>
+			<br><br>
+			The results show a slight improvement in MSE by adding offshore data. One interesting extension to consider
+			would be to add
+			more buoys to the dataset, and see if model prediction is benefitted by context from other locations.
+		</div>
+		<div class="margin-right-block">
+		</div>
+	</div>
+	<div class="content-margin-container" id="conclusion">
+		<div class="margin-left-block">
+		</div>
+		<div class="main-content-block">
+			<h1>Conclusion</h1>
+			In this analysis, we explored the potential of using offshore buoy data to improve wave height predictions
+			at nearshore locations. Our findings suggest that incorporating offshore data leads to slight improvements
+			in
+			validation loss, or equivalently, prediction accuracy in terms of MSE. Promisingly, there is indication that
+			the model gains predictive capacity depending on the relevance of the time-slice of data from the offshore
+			buoy that we provide.
+			The notions of "relevance" corresponds to what we might believe to be intuitively true, as discussed when
+			considering the
+			much larger time lag for the Topanga buoy due to counter currents.
+			<br><br>
+			While the improvements in prediction accuracy are relatively small, the approach lends itself well to
+			extension based on
+			additional data from neighboring buoys. The NOAA data is quite comprehensive, and many buoys have nearby
+			buoys in a multitude
+			of directions. Additionally, an approach to making the time-lag parameter <i>k</i> optimizable was
+			discussed.
+		</div>
+		<div class="margin-right-block">
+		</div>
+	</div>
+
+	<div class="content-margin-container" id="citations">
+		<div class="margin-left-block">
+		</div>
+		<div class="main-content-block">
+			<div class='citation' id="references" style="height:auto"><br>
+				<span style="font-size:16px">References:</span><br><br>
+				<a id="ref_1"></a>[1] <a
+					href="https://www.sciencedirect.com/science/article/abs/pii/S0029801821016231">Caloiero T,
+					Aristodemo F, Ferraro DA. Annual and seasonal trend detection of
+					significant wave height, energy period and wave power in the Mediterranean Sea.
+					Ocean Eng 2022;243:110322.<br><br>
+					<a id="ref_2"></a>[2] <a href="https://www.weather.gov/marine/wavedetail">Coastal Waters
+						Forecasts With Wave Detail, NOAA</a><br><br>
+					<a id="ref_3"></a>[3] <a
+						href="https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2022.983007/full">Song
+						Tao , Han Runsheng ,
+						Meng Fan , Wang Jiarong , Wei Wei , Peng Shiqiu.
+						A significant wave height prediction method based on deep learning combining the correlation
+						between wind and wind waves (2022); Frontiers in Marine Science</a><br><br>
+					<a id="ref_4"></a>[4] <a
+						href="https://finance.yahoo.com/news/global-surfing-business-report-2023-154800261.html">Global
+						Surfing Business Report 2023-2030: Media Emerges as a Key Promotional Platform, Sales
+						Continue
+						to Gain Traction through Online Channels</a><br><br>
+					<a id="ref_5"></a>[5] <a href="https://github.com/NOAA-EMC/WW3/wiki/About-WW3">About WAVEWATCH
+						III</a><br><br>
+					<a id="ref_6"></a>[6]<a href="https://doi.org/10.1016/j.egyai.2023.100257">Chen, Yaoran, Dan
+						Zhang,
+						Xiaowei Li, Yan Peng, Chuhan Wu, Huayan Pu,
+						Dai Zhou, Yong Cao, and Jiujun Zhang. 2023. “Significant Wave Height Prediction through
+						Artificial Intelligent Mode Decomposition for Wave Energy Management.” Energy and AI 14
+						(October):100257.
+					</a><br><br>
+					<a id="ref_7"></a>[7] <a
+						href="https://www.noaa.gov/jetstream/ocean/waves#:~:text=Big%20wave%20surfing%20in%20Hawaii">NOAA:
+						Waves</a>
+					<a id="ref_8"></a>[8] <a
+						href="https://www.sciencedirect.com/science/article/pii/S2666546823000290?fr=RR-2&ref=pdf_download&rr=8f00edede8273b8e">Yaoran
+						Chen,
+						Dan Zhang,
+						Xiaowei Li,
+						Yan Peng. Significant wave height prediction through artificial intelligent mode decomposition
+						for wave energy management (2023)</a>
+					<a id="ref_9" href="https://www.sciencedirect.com/science/article/pii/S1463500322001652"></a>[9] <a
+						href="">Felipe C. Minuzzi,
+						Leandro Farina. A deep learning approach to predict significant wave height using long
+						short-term memory (2023)</a>
+			</div>
+		</div>
+		<div class="margin-right-block">
+			<!-- margin notes for reference block here -->
+
+		</div>
+
+	</div>
+
+	<div class="content-margin-container" id="appendix">
+		<div class="margin-left-block">
+		</div>
+		<div class="main-content-block">
+			<h1>Appendix</h1>
+
+			<h3>1. Results of data before & after imputation</h3>
+
+			<div class="content-margin-container" id="data-after-imputation"></div>
+			<div class="margin-left-block">
+			</div>
+			<div class="main-content-block">
+				<h5> Data Distribution Before Imputation</h5>
+				<img src="./images/plots/data_distr_before_imp.png" style="width:100%"
+					alt="Data Distribution Before Imputation" id="data-distr-before-imp">
+				<br><br>
+				<h5> Data Distribution After Imputation</h5>
+				<img src="./images/plots/data_distr_after_imp.png" style="width:100%"
+					alt="Data Distribution After Imputation" id="data-distr-after-imp">
+				<br><br>
+				Boxplot of data before and after imputation
+			</div>
+			<div class="margin-right-block">
+			</div>
+
+			<h3>2. Wave directions during the month of January</h3>
+
+			<div class="content-margin-container" id="wave-directions">
+				<div class="margin-left-block">
+				</div>
+				<div class="main-content-block">
+					<img src="./images/plots/wave_dirs.png" alt="Wave Directions Plot" id="wave-dirs-plot">
+
+					Wave directions during the month of January for each buoy
+				</div>
+				<div class="margin-right-block">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="margin-right-block">
+	</div>
+	</div>
+
+</body>
+
+</html>
